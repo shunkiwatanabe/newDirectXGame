@@ -49,11 +49,6 @@ private: // メンバ変数
 	DebugText* debugText_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
-
-	/*Vector3 p1;
-	Vector3 p2;
-	Vector4 color;*/
-
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
