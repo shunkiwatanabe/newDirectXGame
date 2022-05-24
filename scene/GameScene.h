@@ -10,6 +10,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
+//#include<random>
 
 /// <summary>
 /// ゲームシーン
@@ -50,12 +51,22 @@ private: // メンバ変数
 
 	uint32_t textureHandle_ = 0;
 	Model* model_ = nullptr;
-	WorldTransform worldTransform_;
+	WorldTransform worldTransforms_[100];
 	ViewProjection viewProjection_;
 
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
-	/// <summary>
+
+	//カメラ上方向の角度
+	float viewAngle = 0.0f;
+
+	////乱数シード生成
+	//std::random_device seed_gen;
+	////メルセンヌ・ツイスターの乱数エンジン
+	//std::mt19937_64 engine(seed_gen());
+	////乱数範囲の指定
+	//std::uniform_real_distribution<float>dist(-5.0f, 5.0f);
+	///// <summary>
 	/// ゲームシーン用
 	/// </summary>
 };
