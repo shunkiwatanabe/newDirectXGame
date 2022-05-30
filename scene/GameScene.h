@@ -43,6 +43,46 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 最小値出す
+	/// </summary>
+	float MinNum(float num, float num2)
+	{
+		if (num < num2)
+		{
+			return num;
+		}
+		return num2;
+	}
+
+	/// <summary>
+	/// 最大値出す
+	/// </summary>
+	float MaxNum(float num, float num2)
+	{
+		if (num > num2)
+		{
+			return num;
+		}
+		return num2;
+	}
+	
+	/// <summary>
+	/// 最小値,最大値を超えないようにする関数
+	/// </summary>
+	float Clamp(float min, float max, float num)
+	{
+		if (num < min)
+		{
+			num = min;
+		}
+		else if (num > max)
+		{
+			num = max;
+		}
+		return num;
+	}
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -59,6 +99,9 @@ private: // メンバ変数
 
 	//カメラ上方向の角度
 	float viewAngle = 0.0f;
+
+	//ラジアン変換の角度
+	float degree;
 
 	////乱数シード生成
 	//std::random_device seed_gen;
