@@ -83,6 +83,23 @@ public: // メンバ関数
 		return num;
 	}
 
+	//パーツID
+	enum PartId
+	{
+		kRoot,	//大元
+		kSpine,	//脊椎
+		kChest,	//胸
+		kHead,	//頭
+		kArmL,	//左腕
+		kArmR,	//右腕
+		kHip,	//尻
+		kLegL,	//左足
+		kLegR,	//右足
+
+		kNumPartId
+	};
+
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -91,7 +108,7 @@ private: // メンバ変数
 
 	uint32_t textureHandle_ = 0;
 	Model* model_ = nullptr;
-	WorldTransform worldTransforms_[100];
+	WorldTransform worldTransforms_[9];
 	ViewProjection viewProjection_;
 
 	//デバッグカメラ
@@ -101,7 +118,7 @@ private: // メンバ変数
 	float viewAngle = 0.0f;
 
 	//ラジアン変換の角度
-	float degree;
+	//float degree;
 
 	////乱数シード生成
 	//std::random_device seed_gen;
