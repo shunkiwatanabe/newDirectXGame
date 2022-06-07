@@ -4,11 +4,116 @@
 #include "PrimitiveDrawer.h"
 #include "Player.h"
 
-//Matrix4 CreateMatScale(Vector3 scale);
-//Matrix4 CreateMatRotation(Vector3 rotation);
-//Matrix4 CreateMatTranslation(Vector3 transration);
-//Matrix4 CreateMatWorld(Vector3 scale, Vector3 rotation, Vector3 translation);
+//Matrix4 Player::CreateMatScale(Vector3 scale)
+//{
+//	//行列の更新
+//	Matrix4 matIdentity;
+//	matIdentity.m[0][0] = 1;
+//	matIdentity.m[1][1] = 1;
+//	matIdentity.m[2][2] = 1;
+//	matIdentity.m[3][3] = 1;
+//
+//	Matrix4 matScale = matIdentity;
+//	matScale.m[0][0] = worldTransform_.scale_.x;
+//	matScale.m[1][1] = worldTransform_.scale_.y;
+//	matScale.m[2][2] = worldTransform_.scale_.z;
+//
+//	worldTransform_.matWorld_ = matIdentity;
+//	worldTransform_.matWorld_ *= matScale;
+//	return matScale;
+//}
+//
+//Matrix4 Player::CreateMatRotX(Vector3 rotation)
+//{
+//	//行列の更新
+//	Matrix4 matIdentity;
+//	matIdentity.m[0][0] = 1;
+//	matIdentity.m[1][1] = 1;
+//	matIdentity.m[2][2] = 1;
+//	matIdentity.m[3][3] = 1;
+//
+//	Matrix4 matRotX = matIdentity;
+//	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
+//	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
+//	matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
+//	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
+//
+//	worldTransform_.matWorld_ = matIdentity;
+//	worldTransform_.matWorld_ *= matRotX;
+//
+//	return matRotX;
+//}
+//
+//Matrix4 Player::CreateMatRotY(Vector3 rotation)
+//{
+//	//行列の更新
+//	Matrix4 matIdentity;
+//	matIdentity.m[0][0] = 1;
+//	matIdentity.m[1][1] = 1;
+//	matIdentity.m[2][2] = 1;
+//	matIdentity.m[3][3] = 1;
+//
+//	Matrix4 matRotY = matIdentity;
+//	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
+//	matRotY.m[0][2] = sin(worldTransform_.rotation_.y);
+//	matRotY.m[2][0] = -sin(worldTransform_.rotation_.y);
+//	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
+//
+//	worldTransform_.matWorld_ = matIdentity;
+//	worldTransform_.matWorld_ *= matRotY;
+//
+//	return matRotY;
+//}
+//Matrix4 Player::CreateMatRotZ(Vector3 rotation)
+//{
+//	//行列の更新
+//	Matrix4 matIdentity;
+//	matIdentity.m[0][0] = 1;
+//	matIdentity.m[1][1] = 1;
+//	matIdentity.m[2][2] = 1;
+//	matIdentity.m[3][3] = 1;
+//
+//	Matrix4 matRotZ = matIdentity;
+//	matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
+//	matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
+//	matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
+//	matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
+//
+//	worldTransform_.matWorld_ = matIdentity;
+//	worldTransform_.matWorld_ *= matRotZ;
+//
+//	return matRotZ;
+//}
+//
+//Matrix4 Player::CreateMatTrans(Vector3 tranlation)
+//{
+//	//行列の更新
+//	Matrix4 matIdentity;
+//	matIdentity.m[0][0] = 1;
+//	matIdentity.m[1][1] = 1;
+//	matIdentity.m[2][2] = 1;
+//	matIdentity.m[3][3] = 1;
+//
+//	Matrix4 matTrans = matIdentity;
+//	matTrans.m[3][0] = worldTransform_.translation_.x;
+//	matTrans.m[3][1] = worldTransform_.translation_.y;
+//	matTrans.m[3][2] = worldTransform_.translation_.z;
+//	matTrans.m[3][3] = 1;
+//
+//	worldTransform_.matWorld_ = matIdentity;
+//	worldTransform_.matWorld_ *= matTrans;
+//
+//	return matTrans;
+//}
+Vector3 Player::Velocity(Vector3 velocity, WorldTransform worldTransform)
+{
+	Vector3 v;
+	v.x = velocity.x * worldTransform.matWorld_.m[0][0] + velocity.y * worldTransform.matWorld_.m[1][0] + velocity.z * worldTransform.matWorld_.m[2][0];
+	v.y = velocity.x * worldTransform.matWorld_.m[0][1] + velocity.y * worldTransform.matWorld_.m[1][1] + velocity.z * worldTransform.matWorld_.m[2][1];
+	v.z = velocity.x * worldTransform.matWorld_.m[0][2] + velocity.y * worldTransform.matWorld_.m[1][2] + velocity.z * worldTransform.matWorld_.m[2][2];
 
+	return v;
+}
 
 void Player::Initialize(Model* model, uint32_t textureHandle)
 {
@@ -29,6 +134,12 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 
 void Player::Update()
 {
+	//デスフラグの立った球を削除
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet)
+		{
+			return bullet->IsDead();
+		});
+
 	//キャラクターの移動ベクトル
 	Vector3 move = { 0,0,0 };
 
@@ -151,10 +262,17 @@ void Player::Attack()
 {
 	if (input_->TriggerKey(DIK_SPACE))
 	{
+		//弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		//速度ベクトルを自機の向きに合わせて回転させる
+		velocity = Velocity(velocity, worldTransform_);
+
 		//弾を生成し、初期化
 		//PlayerBullet* newBullet = new PlayerBullet();
 		std::unique_ptr<PlayerBullet>newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 		//弾を登録する
 		bullets_.push_back(std::move(newBullet));
@@ -248,3 +366,4 @@ void Player::Draw(ViewProjection viewProjection)
 //
 //	matWorld *= matTrans;
 //}
+

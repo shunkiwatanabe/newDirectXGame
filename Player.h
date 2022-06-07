@@ -41,9 +41,19 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection);
 
+	Matrix4 CreateMatScale(Vector3 scale);
+	Matrix4 CreateMatRotX(Vector3 rotation);
+	Matrix4 CreateMatRotY(Vector3 rotation);
+	Matrix4 CreateMatRotZ(Vector3 rotation);
+	Matrix4 CreateMatTrans(Vector3 translation);
+
+	Matrix4 CreateMatVector(Vector3 velocity, Matrix4 matWorld);
+
+	Vector3 Velocity(Vector3 velocity, WorldTransform worldTransform);
+
+private://メンバ変数
 	//ワールド変換データ
 	WorldTransform worldTransform_;
-private://メンバ変数
 	//モデル
 	Model* model_ = nullptr;
 	//テクスチャハンドル
