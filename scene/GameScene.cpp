@@ -10,6 +10,9 @@ GameScene::~GameScene()
 {
 	delete model_;
 	delete debugCamera_;
+
+	//自キャラの解放
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -21,23 +24,14 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	model_ = Model::Create();
-	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
+	//自キャラの生成
+	player_ = new Player();
+	//自キャラの初期化
+	player_->Initialize(model_,textureHandle_);
+
 	debugCamera_ = new DebugCamera(1280, 720);
-
-	/*p1.x = 0;
-	p1.y = 0;
-	p1.z = 0;
-
-	p2.x = 50;
-	p2.y = 50;
-	p2.z = 50;
-
-	color.x = 255;
-	color.y = 0;
-	color.z = 0;
-	color.w = 0;*/
 
 	//軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -51,6 +45,10 @@ void GameScene::Initialize() {
 void GameScene::Update()
 {
 	debugCamera_->Update();
+
+	//自キャラの更新
+	player_->Update();
+	player_->Rotate();
 }
 
 void GameScene::Draw() {
@@ -79,12 +77,9 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 0,0,0 }, { 0,10,0 }, { 255,0,0,255 });
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 0,10,0 }, { 10,0,10 }, { 255,0,0,255 });
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 10,0,10 }, { 10,0,-10 }, { 255,0,0,255 });
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 10,0,-10 }, { 0,10,0 }, { 255,0,0,255 });
+
+	//自キャラの描画
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

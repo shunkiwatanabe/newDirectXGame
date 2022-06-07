@@ -75,6 +75,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 軸表示の更新
 		axisIndicator->Update();
 
+		
+
 		// 描画開始
 		dxCommon->PreDraw();
 		// ゲームシーンの描画
