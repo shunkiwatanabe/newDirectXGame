@@ -5,6 +5,8 @@
 #include "DebugText.h"
 #include "ViewProjection.h"
 #include "PlayerBullet.h"
+#include <memory>
+#include <list>
 
 ///<summary>
 ///©ƒLƒƒƒ‰
@@ -54,5 +56,7 @@ private://ƒƒ“ƒo•Ï”
 	ViewProjection* viewProjection_;
 
 	//’e
-	PlayerBullet* bullet_ = nullptr;
+	//PlayerBullet* bullet_ = nullptr;
+	//std::unique_ptr<PlayerBullet>bullet_;
+	std::list < std::unique_ptr < PlayerBullet >>bullets_;
 };
