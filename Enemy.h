@@ -35,6 +35,9 @@ public:
 	Matrix4 CreateMatRotZ(Vector3 rotation);
 	Matrix4 CreateMatTrans(Vector3 translation);
 
+	void approach(WorldTransform& worldtransform,Vector3 appSpeed);
+	void leave(WorldTransform& worldtransform, Vector3 leaveSpeed);
+
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -42,4 +45,11 @@ private:
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	enum class Phase {
+		Approach,	//接近する
+		Leave,		//離脱する
+	};
+	Phase phase_ = Phase::Approach;
+	
 };

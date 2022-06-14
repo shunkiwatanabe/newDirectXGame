@@ -39,7 +39,7 @@ public:
 	///<summary>
 	///•`‰æ
 	/// </summary>
-	void Draw(ViewProjection viewProjection);
+	void Draw(ViewProjection& viewProjection);
 
 	/*Matrix4 CreateMatScale(Vector3 scale);
 	Matrix4 CreateMatRotX(Vector3 rotation);

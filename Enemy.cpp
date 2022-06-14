@@ -106,6 +106,22 @@ Matrix4 Enemy::CreateMatTrans(Vector3 tranlation)
 	return matTrans;
 }
 
+void Enemy::approach(WorldTransform& worldtransform, Vector3 appSpeed)
+{
+	//移動(ベクトル加算)
+	worldTransform_.translation_ += appSpeed;
+	//既定の位置に達したら離脱
+	if (worldTransform_.translation_.z < 0)
+	{
+		phase_ = Phase::Leave;
+	}
+}
+
+void Enemy::leave(WorldTransform& worldtransform, Vector3 leaveSpeed)
+{
+	//移動(ベクトルを加算)
+	worldTransform_.translation_ += leaveSpeed;
+}
 
 void Enemy::Initialize(Model* model/*, const Vector3& position*/)
 {
@@ -130,12 +146,8 @@ void Enemy::Update()
 {
 
 	////移動処理
-	//Vector3 move = { 0,0,0 };
 	//移動の速さ
 	const float kEnemySpeed = 0.2f;
-
-	//move = { 0,0,-kEnemySpeed };
-
 	//座標を移動させる(1フレームの移動量を足しこむ)
 	worldTransform_.translation_.z -= kEnemySpeed;
 
@@ -191,7 +203,23 @@ void Enemy::Update()
 	worldTransform_.matWorld_ *= matTrans;*/
 
 	worldTransform_.TransferMatrix();
-	
+
+
+	Vector3 approachSpeed = { 0,0,0 };
+	Vector3 leaveSpeed = { -0.05f,0.05f,0 };
+	//switch文による実装
+	switch (phase_)
+	{
+
+	case Phase::Approach:
+	default:
+		approach(worldTransform_, approachSpeed);
+		break;
+	case Phase::Leave:
+		leave(worldTransform_, leaveSpeed);
+		break;
+	}
+
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
