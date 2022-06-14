@@ -3,6 +3,7 @@
 #include <cassert>
 #include "AxisIndicator.h"
 #include "PrimitiveDrawer.h"
+#include "Enemy.h"
 
 GameScene::GameScene() {}
 
@@ -13,6 +14,8 @@ GameScene::~GameScene()
 
 	//自キャラの解放
 	delete player_;
+	//敵の解放
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -29,7 +32,12 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
+	player_->Initialize(model_, textureHandle_);
+
+	//敵の生成
+	enemy_ = new Enemy();
+	//敵の初期化
+	enemy_->Initialize(model_);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -49,6 +57,9 @@ void GameScene::Update()
 	//自キャラの更新
 	player_->Update();
 	player_->Rotate();
+
+	//敵の更新
+	/*if (enemy_ != NULL)*/ enemy_->Update();
 }
 
 void GameScene::Draw() {
@@ -80,6 +91,7 @@ void GameScene::Draw() {
 
 	//自キャラの描画
 	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

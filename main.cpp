@@ -5,6 +5,7 @@
 #include "WinApp.h"
 #include "AxisIndicator.h"
 #include "PrimitiveDrawer.h"
+#include "winbase.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
