@@ -155,7 +155,7 @@ void Enemy::Initialize(Model* model/*, const Vector3& position*/)
 	//テクスチャ読み込み
 	textureHandle_ = TextureManager::Load("black.png");
 
-	worldTransform_.translation_ = { 10,2,10 };
+	worldTransform_.translation_ = { 10,2,30 };
 	//ワ-ルドトランスフォームの初期化
 	worldTransform_.Initialize();
 
@@ -178,9 +178,9 @@ void Enemy::Update()
 
 	////移動処理
 	//移動の速さ
-	const float kEnemySpeed = 0.02f;
+	float kEnemySpeed = 0.02f;
 	//座標を移動させる(1フレームの移動量を足しこむ)
-	worldTransform_.translation_.z -= kEnemySpeed;
+	worldTransform_.translation_.x -= kEnemySpeed;
 
 	//弾更新
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
@@ -190,6 +190,8 @@ void Enemy::Update()
 
 	Vector3 approachSpeed = { 0,0,0 };
 	Vector3 leaveSpeed = { -0.05f,0.05f,0 };
+
+
 	//switch文による実装
 	/*switch (phase_)
 	{
@@ -274,7 +276,7 @@ void Enemy::Draw(const ViewProjection& viewProjection)
 void Enemy::Fire()
 {
 	//弾の速度
-	const float kBulletSpeed = -1.0f;
+	const float kBulletSpeed = -0.1f;
 	Vector3 velocity(0, 0, kBulletSpeed);
 
 	////速度ベクトルを自機の向きに合わせて回転させる
@@ -301,8 +303,8 @@ void Enemy::Fire()
 		player_->GetWorldPosition().z - GetWorldPosition().z
 	};
 
-	float nagasa = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
-	velocity /= nagasa;
+	float length = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
+	velocity /= length;
 
 	velocity *= -kBulletSpeed;
 
@@ -330,4 +332,9 @@ Vector3 Enemy::GetWorldPosition()
 	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
+}
+
+void Enemy::OnCollision()
+{
+	//何もしない
 }

@@ -3,7 +3,8 @@
 #include "WorldTransform.h"
 #include "math.h"
 
-Matrix4 Matrix4::CreateMatScale(Vector3 scale, WorldTransform worldTransform_) {
+Matrix4 Matrix4::MatIdentity()
+{
 	//行列の更新
 	Matrix4 matIdentity;
 	matIdentity.m[0][0] = 1;
@@ -11,107 +12,76 @@ Matrix4 Matrix4::CreateMatScale(Vector3 scale, WorldTransform worldTransform_) {
 	matIdentity.m[2][2] = 1;
 	matIdentity.m[3][3] = 1;
 
-	Matrix4 matScale = matIdentity;
-	matScale.m[0][0] = worldTransform_.scale_.x;
-	matScale.m[1][1] = worldTransform_.scale_.y;
-	matScale.m[2][2] = worldTransform_.scale_.z;
+	return matIdentity;
+}
 
-	worldTransform_.matWorld_ = matIdentity;
+Matrix4 Matrix4::CreateMatScale(Vector3 scale) {
+	//行列の更新
+
+	Matrix4 matScale = MatIdentity();
+	matScale.m[0][0] = scale.x;
+	matScale.m[1][1] = scale.y;
+	matScale.m[2][2] = scale.z;
+	matScale.m[3][3] = 1;
+
 	return matScale;
 }
 
-Matrix4 Matrix4::CreateMatRotX(Vector3 rotation, WorldTransform worldTransform_) {
+Matrix4 Matrix4::CreateMatRotX(Vector3 rotation) {
 	//行列の更新
-	Matrix4 matIdentity;
-	matIdentity.m[0][0] = 1;
-	matIdentity.m[1][1] = 1;
-	matIdentity.m[2][2] = 1;
-	matIdentity.m[3][3] = 1;
-
-	Matrix4 matRotX = matIdentity;
-	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
-	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
-	matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
-	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
-
-	worldTransform_.matWorld_ = matIdentity;
+	Matrix4 matRotX = MatIdentity();
+	matRotX.m[1][1] = cos(rotation.x);
+	matRotX.m[1][2] = sin(rotation.x);
+	matRotX.m[2][1] = -sin(rotation.x);
+	matRotX.m[2][2] = cos(rotation.x);
 
 	return matRotX;
 }
 
-Matrix4 Matrix4::CreateMatRotY(Vector3 rotation, WorldTransform worldTransform_) {
+Matrix4 Matrix4::CreateMatRotY(Vector3 rotation) {
 	//行列の更新
-	Matrix4 matIdentity;
-	matIdentity.m[0][0] = 1;
-	matIdentity.m[1][1] = 1;
-	matIdentity.m[2][2] = 1;
-	matIdentity.m[3][3] = 1;
-
-	Matrix4 matRotY = matIdentity;
-	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
-	matRotY.m[0][2] = sin(worldTransform_.rotation_.y);
-	matRotY.m[2][0] = -sin(worldTransform_.rotation_.y);
-	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
-
-	worldTransform_.matWorld_ = matIdentity;
+	Matrix4 matRotY = MatIdentity();
+	matRotY.m[0][0] = cos(rotation.y);
+	matRotY.m[0][2] = sin(rotation.y);
+	matRotY.m[2][0] = -sin(rotation.y);
+	matRotY.m[2][2] = cos(rotation.y);
 
 	return matRotY;
 }
 
-Matrix4 Matrix4::CreateMatRotZ(Vector3 rotation, WorldTransform worldTransform_) {
+Matrix4 Matrix4::CreateMatRotZ(Vector3 rotation) {
 	//行列の更新
-	Matrix4 matIdentity;
-	matIdentity.m[0][0] = 1;
-	matIdentity.m[1][1] = 1;
-	matIdentity.m[2][2] = 1;
-	matIdentity.m[3][3] = 1;
-
-	Matrix4 matRotZ = matIdentity;
-	matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
-	matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
-	matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
-
-	worldTransform_.matWorld_ = matIdentity;
+	Matrix4 matRotZ = MatIdentity();
+	matRotZ.m[0][0] = cos(rotation.z);
+	matRotZ.m[0][1] = sin(rotation.z);
+	matRotZ.m[1][0] = -sin(rotation.z);
+	matRotZ.m[1][1] = cos(rotation.z);
 
 	return matRotZ;
 }
 
-Matrix4 Matrix4::CreateMatTrans(Vector3 translation, WorldTransform worldTransform_) {
+Matrix4 Matrix4::CreateMatTrans(Vector3 translation) {
 	//行列の更新
-	Matrix4 matIdentity;
-	matIdentity.m[0][0] = 1;
-	matIdentity.m[1][1] = 1;
-	matIdentity.m[2][2] = 1;
-	matIdentity.m[3][3] = 1;
-
-	Matrix4 matTrans = matIdentity;
-	matTrans.m[3][0] = worldTransform_.translation_.x;
-	matTrans.m[3][1] = worldTransform_.translation_.y;
-	matTrans.m[3][2] = worldTransform_.translation_.z;
+	Matrix4 matTrans = MatIdentity();
+	matTrans.m[3][0] = translation.x;
+	matTrans.m[3][1] = translation.y;
+	matTrans.m[3][2] = translation.z;
 	matTrans.m[3][3] = 1;
-
-	worldTransform_.matWorld_ = matIdentity;
 
 	return matTrans;
 }
 
-Matrix4 Matrix4::CreateMatrix(Vector3 scale, Vector3 rotation, Vector3 translation, WorldTransform worldTransform_)
+Matrix4 Matrix4::CreateMatrix(Vector3 scale, Vector3 rotation, Vector3 translation)
 {
-	Matrix4 matScale = CreateMatScale(scale, worldTransform_);
-	Matrix4 matRotZ = CreateMatRotZ(rotation, worldTransform_);
-	Matrix4 matRotX = CreateMatRotX(rotation, worldTransform_);
-	Matrix4 matRotY = CreateMatRotY(rotation, worldTransform_);
-	Matrix4 matTrans = CreateMatTrans(translation, worldTransform_);
+	Matrix4 matWorld_ = MatIdentity();
 
-	worldTransform_.matWorld_ *= matScale;
-	worldTransform_.matWorld_ *= matRotZ;
-	worldTransform_.matWorld_ *= matRotX;
-	worldTransform_.matWorld_ *= matRotY;
-	worldTransform_.matWorld_ *= matTrans;
-	worldTransform_.TransferMatrix();
+	matWorld_ *= CreateMatScale(scale);
+	matWorld_ *= CreateMatScale(rotation);
+	matWorld_ *= CreateMatScale(rotation);
+	matWorld_ *= CreateMatScale(rotation);
+	matWorld_ *= CreateMatScale(translation);
 
-	return worldTransform_.matWorld_;
+	return matWorld_;
 }
 
 Vector3 Matrix4::Velocity(Vector3 velocity, WorldTransform worldTransform) {

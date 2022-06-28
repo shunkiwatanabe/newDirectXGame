@@ -235,14 +235,7 @@ void Player::Update()
 
 	worldTransform_.TransferMatrix();
 
-	//worldTransform_.matWorld_ = matrix_->CreateMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_, worldTransform_);
-
-	/*worldTransform_.matWorld_ *= matrix_->CreateMatScale(worldTransform_.scale_, worldTransform_);
-	worldTransform_.matWorld_ *= matrix_->CreateMatRotZ(worldTransform_.rotation_, worldTransform_);
-	worldTransform_.matWorld_ *= matrix_->CreateMatRotX(worldTransform_.rotation_, worldTransform_);
-	worldTransform_.matWorld_ *= matrix_->CreateMatRotY(worldTransform_.rotation_, worldTransform_);
-	worldTransform_.matWorld_ *= matrix_->CreateMatTrans(worldTransform_.translation_, worldTransform_);
-
+	/*matrix_->CreateMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	worldTransform_.TransferMatrix();*/
 
 	debugText_->SetPos(50, 50);
@@ -269,7 +262,7 @@ void Player::Attack()
 	if (input_->TriggerKey(DIK_SPACE))
 	{
 		//弾の速度
-		const float kBulletSpeed = 1.0f;
+		const float kBulletSpeed = 0.5f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		//速度ベクトルを自機の向きに合わせて回転させる
@@ -383,4 +376,9 @@ Vector3 Player::GetWorldPosition()
 	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
+}
+
+void Player::OnCollision()
+{
+	//何もしない
 }

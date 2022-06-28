@@ -12,6 +12,7 @@
 #include "DebugCamera.h"
 #include"Player.h"
 #include "Enemy.h"
+#include "EnemyBullet.h"
 
 /// <summary>
 /// ゲームシーン
@@ -39,6 +40,11 @@ public: // メンバ関数
 	/// </summary>
 	void Update();
 
+	///<summary>
+	///衝突判定と応答
+	/// </summary>
+	void CheckAllCollision();
+
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -58,6 +64,14 @@ private: // メンバ変数
 
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
+	EnemyBullet* enemyBullet_ = nullptr;
+
+	//自キャラの半径
+	float playerRadius = 2.0f;
+	float playerBulletRadius = 1.0f;
+	//敵弾の半径
+	float enemyRadius = 2.0f;
+	float enemyBulletRadius = 1.0f;
 
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;

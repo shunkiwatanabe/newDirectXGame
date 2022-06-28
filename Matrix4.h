@@ -23,12 +23,13 @@ public:
 	// 代入演算子オーバーロード
 	Matrix4& operator*=(const Matrix4& m2);
 
-	Matrix4 CreateMatScale(Vector3 scale, WorldTransform worldTransform_);
-	Matrix4 CreateMatRotX(Vector3 rotation, WorldTransform worldTransform_);
-	Matrix4 CreateMatRotY(Vector3 rotation, WorldTransform worldTransform_);
-	Matrix4 CreateMatRotZ(Vector3 rotation, WorldTransform worldTransform_);
-	Matrix4 CreateMatTrans(Vector3 translation, WorldTransform worldTransform_);
-	Matrix4 CreateMatrix(Vector3 scale, Vector3 rotation, Vector3 translation, WorldTransform worldTransform_);
+	Matrix4 MatIdentity();
+	Matrix4 CreateMatScale(Vector3 scale);
+	Matrix4 CreateMatRotX(Vector3 rotation);
+	Matrix4 CreateMatRotY(Vector3 rotation);
+	Matrix4 CreateMatRotZ(Vector3 rotation);
+	Matrix4 CreateMatTrans(Vector3 translation);
+	Matrix4 CreateMatrix(Vector3 scale, Vector3 rotation, Vector3 translation);
 
 
 	Vector3 Velocity(Vector3 velocity, WorldTransform worldTransform);
