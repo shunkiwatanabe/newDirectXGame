@@ -30,5 +30,6 @@ public:
 	Matrix4 CreateMatTrans(Vector3 translation, WorldTransform worldTransform_);
 	Matrix4 CreateMatrix(Vector3 scale, Vector3 rotation, Vector3 translation, WorldTransform worldTransform_);
 
+
 	Vector3 Velocity(Vector3 velocity, WorldTransform worldTransform);
 };

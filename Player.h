@@ -7,6 +7,7 @@
 #include "PlayerBullet.h"
 #include <memory>
 #include <list>
+#include "Matrix4.h"
 
 ///<summary>
 ///自キャラ
@@ -41,15 +42,10 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
-	/*Matrix4 CreateMatScale(Vector3 scale);
-	Matrix4 CreateMatRotX(Vector3 rotation);
-	Matrix4 CreateMatRotY(Vector3 rotation);
-	Matrix4 CreateMatRotZ(Vector3 rotation);
-	Matrix4 CreateMatTrans(Vector3 translation);
-
-	Matrix4 CreateMatVector(Vector3 velocity, Matrix4 matWorld);*/
 
 	Vector3 Velocity(Vector3 velocity, WorldTransform worldTransform);
+
+	Vector3 GetWorldPosition();
 
 private://メンバ変数
 	//ワールド変換データ
@@ -64,6 +60,9 @@ private://メンバ変数
 	DebugText* debugText_ = nullptr;
 
 	ViewProjection* viewProjection_;
+
+	Matrix4* matrix_ = nullptr;
+
 
 	//弾
 	//PlayerBullet* bullet_ = nullptr;

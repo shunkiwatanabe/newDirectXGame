@@ -76,6 +76,8 @@ void PlayerBullet::Update()
 
 	worldTransform_.TransferMatrix();
 
+	//worldTransform_.matWorld_ = matrix_->CreateMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_, worldTransform_);
+
 	if (--deathTimer_ <= 0)
 	{
 		isDead_ = true;

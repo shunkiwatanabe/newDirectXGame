@@ -224,10 +224,6 @@ void Player::Update()
 	matTrans.m[3][2] = worldTransform_.translation_.z;
 	matTrans.m[3][3] = 1;
 
-	/*Matrix4 matScale = CreateMatScale(worldTransform_.scale_);
-	Matrix4 matRotation = CreateMatRotation(worldTransform_.rotation_);
-	Matrix4 matTransration = CreateMatTranslation(worldTransform_.translation_);*/
-
 	worldTransform_.matWorld_ = matIdentity;
 	worldTransform_.matWorld_ *= matScale;
 
@@ -238,6 +234,16 @@ void Player::Update()
 	worldTransform_.matWorld_ *= matTrans;
 
 	worldTransform_.TransferMatrix();
+
+	//worldTransform_.matWorld_ = matrix_->CreateMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_, worldTransform_);
+
+	/*worldTransform_.matWorld_ *= matrix_->CreateMatScale(worldTransform_.scale_, worldTransform_);
+	worldTransform_.matWorld_ *= matrix_->CreateMatRotZ(worldTransform_.rotation_, worldTransform_);
+	worldTransform_.matWorld_ *= matrix_->CreateMatRotX(worldTransform_.rotation_, worldTransform_);
+	worldTransform_.matWorld_ *= matrix_->CreateMatRotY(worldTransform_.rotation_, worldTransform_);
+	worldTransform_.matWorld_ *= matrix_->CreateMatTrans(worldTransform_.translation_, worldTransform_);
+
+	worldTransform_.TransferMatrix();*/
 
 	debugText_->SetPos(50, 50);
 	debugText_->Printf("translation:(%f,%f,%f)", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
@@ -367,3 +373,14 @@ void Player::Draw(ViewProjection& viewProjection)
 //	matWorld *= matTrans;
 //}
 
+Vector3 Player::GetWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
+}

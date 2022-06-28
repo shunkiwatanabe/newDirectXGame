@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "ViewProjection.h"
+#include "Matrix4.h"
 
 ///<summary>
 ///敵の弾
@@ -31,12 +32,6 @@ public:
 
 	bool IsDead()const { return isDead_; }
 
-	Matrix4 CreateMatScale(Vector3 scale);
-	Matrix4 CreateMatRotX(Vector3 rotation);
-	Matrix4 CreateMatRotY(Vector3 rotation);
-	Matrix4 CreateMatRotZ(Vector3 rotation);
-	Matrix4 CreateMatTrans(Vector3 translation);
-
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
@@ -44,6 +39,8 @@ private:
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	Matrix4* matrix_ = nullptr;
 
 	//速度
 	Vector3 velocity_;

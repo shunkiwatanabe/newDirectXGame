@@ -6,6 +6,9 @@
 #include "DebugText.h"
 #include "ViewProjection.h"
 #include "EnemyBullet.h"
+#include "Matrix4.h"
+
+class Player;
 
 ///<summary>
 ///敵
@@ -30,16 +33,14 @@ public:
 	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw(const ViewProjection& viewProjection);
 
-	Matrix4 CreateMatScale(Vector3 scale);
-	Matrix4 CreateMatRotX(Vector3 rotation);
-	Matrix4 CreateMatRotY(Vector3 rotation);
-	Matrix4 CreateMatRotZ(Vector3 rotation);
-	Matrix4 CreateMatTrans(Vector3 translation);
-
 	Vector3 Velocity(Vector3 velocity, WorldTransform worldTransform);
 
-	void approach(WorldTransform& worldtransform,Vector3 appSpeed);
+	void approach(WorldTransform& worldtransform, Vector3 appSpeed);
 	void leave(WorldTransform& worldtransform, Vector3 leaveSpeed);
+
+	void SetPlayer(Player* player) { player_ = player; };
+
+	Vector3 GetWorldPosition();
 
 	///<>summary
 	///弾発射
@@ -62,6 +63,8 @@ private:
 	//入力するため
 	Input* input_ = nullptr;
 
+	Matrix4* matrix_ = nullptr;
+
 	enum class Phase {
 		Approach,	//接近する
 		Leave,		//離脱する
@@ -72,4 +75,6 @@ private:
 
 	//発射タイマー
 	int32_t shotTimer = 0;
+
+	Player* player_ = nullptr;
 };
