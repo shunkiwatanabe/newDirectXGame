@@ -100,6 +100,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrix4.cpp" />
     <ClCompile Include="matWorld.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
@@ -130,10 +131,10 @@
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\MathUtility.h" />
-    <ClInclude Include="math\Matrix4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="matWorld.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBullet.h" />
