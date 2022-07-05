@@ -67,6 +67,11 @@ void GameScene::Initialize() {
 	//天球の初期化
 	skydome_->Initialize(modelSkydome_);
 
+	//レールカメラの生成
+	railcamera_ = new RailCamera();
+	//レールカメラの初期化
+	railcamera_->Initialize(worldTransform_,worldTransform_.rotation_);
+
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	

@@ -254,7 +254,6 @@ void Player::Rotate()
 		worldTransform_.rotation_.y -= rotateSpeed;
 	}
 
-	worldTransform_.TransferMatrix();
 }
 
 void Player::Attack()

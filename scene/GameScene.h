@@ -14,6 +14,7 @@
 #include "Enemy.h"
 #include "EnemyBullet.h"
 #include "Skydome.h"
+#include "RailCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -69,6 +70,7 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	EnemyBullet* enemyBullet_ = nullptr;
 	Skydome* skydome_ = nullptr;
+	RailCamera* railcamera_ = nullptr;
 
 	//自キャラの半径
 	float playerRadius = 2.0f;
