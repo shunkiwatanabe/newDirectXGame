@@ -21,23 +21,20 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	model_ = Model::Create();
-	worldTransform_.Initialize();
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			worldTransform_[i][j].scale_ = {1.0f, 1.0f, 1.0f};
+			// 3D回転
+			worldTransform_[i][j].rotation_ = {0.0f, 0.0f, 0.0f};
+			worldTransform_[i][j].translation_ = { -34 + i * 5.0f,-18 + j * 5.0f,0 };
+			worldTransform_[i][j].Initialize();
+		}
+	}
 	viewProjection_.Initialize();
 
 	debugCamera_ = new DebugCamera(1280, 720);
-
-	/*p1.x = 0;
-	p1.y = 0;
-	p1.z = 0;
-
-	p2.x = 50;
-	p2.y = 50;
-	p2.z = 50;
-
-	color.x = 255;
-	color.y = 0;
-	color.z = 0;
-	color.w = 0;*/
 
 	//軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -80,11 +77,21 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	//model_->Draw(worldTransform_, viewProjection_, textureHandle_);
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 0,0,0 }, { 0,10,0 }, { 255,0,0,255 });
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 0,10,0 }, { 10,0,10 }, { 255,0,0,255 });
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 10,0,10 }, { 10,0,-10 }, { 255,0,0,255 });
-	PrimitiveDrawer::GetInstance()->DrawLine3d({ 10,0,-10 }, { 0,10,0 }, { 255,0,0,255 });
+	//model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			model_->Draw(worldTransform_[i][j], viewProjection_, textureHandle_);
+			/*if (i % 2 == 1)
+			{
+				if (j % 2 == 1)
+				{
+					break;
+				}
+			}*/
+		}
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

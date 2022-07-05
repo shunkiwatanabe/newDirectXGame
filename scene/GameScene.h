@@ -55,7 +55,8 @@ private: // メンバ変数
 	Vector4 color;*/
 
 	Model* model_ = nullptr;
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_[9][9];
+	int number = 9;
 	ViewProjection viewProjection_;
 
 	//デバッグカメラ
