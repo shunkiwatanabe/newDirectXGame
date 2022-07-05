@@ -13,6 +13,7 @@
 #include"Player.h"
 #include "Enemy.h"
 #include "EnemyBullet.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -55,6 +56,8 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
+	WorldTransform worldTransform_;
+	DebugCamera* debugCanera_ = nullptr;
 
 	uint32_t textureHandle_ = 0;
 
@@ -65,6 +68,7 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
 	EnemyBullet* enemyBullet_ = nullptr;
+	Skydome* skydome_ = nullptr;
 
 	//自キャラの半径
 	float playerRadius = 2.0f;
@@ -72,6 +76,12 @@ private: // メンバ変数
 	//敵弾の半径
 	float enemyRadius = 2.0f;
 	float enemyBulletRadius = 1.0f;
+
+	//3Dモデル
+	Model* modelSkydome_ = nullptr;
+
+	//3Dモデル描画
+	
 
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;

@@ -4,6 +4,8 @@
 #include "AxisIndicator.h"
 #include "PrimitiveDrawer.h"
 #include "Enemy.h"
+#include <memory>
+#include <list>
 
 GameScene::GameScene() {}
 
@@ -18,6 +20,8 @@ GameScene::~GameScene()
 	delete enemy_;
 
 	delete enemyBullet_;
+
+	delete skydome_;
 }
 
 void GameScene::Initialize() {
@@ -29,7 +33,14 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	model_ = Model::Create();
+
+	//カメラ始点座標を設定
+	viewProjection_.eye = { 0,0,-10 };
+	////カメラ注視点座標を設定
+	//viewProjection_.target = { 0,0,0 };
+
 	viewProjection_.Initialize();
+	worldTransform_.Initialize();
 
 	//自キャラの生成
 	player_ = new Player();
@@ -45,7 +56,20 @@ void GameScene::Initialize() {
 
 	enemyBullet_ = new EnemyBullet();
 
+	//天球の生成
+	skydome_ = new Skydome();
+	//std::list<std::unique_ptr<Skydome>>skydome_;
+	
+
+	//3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+
+	//天球の初期化
+	skydome_->Initialize(modelSkydome_);
+
 	debugCamera_ = new DebugCamera(1280, 720);
+
+	
 
 	//軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -66,6 +90,52 @@ void GameScene::Update()
 
 	//敵の更新
 	/*if (enemy_ != NULL)*/ enemy_->Update();
+
+	skydome_->Update();
+
+	debugCamera_->Update();
+
+	//始点の移動ベクトル
+	Vector3 move = { 0,0,0 };
+
+	//始点の移動速さ
+	const float kEyeSpeed = 0.2f;
+
+	//押した方向で移動ベクトルを変更
+	if (input_->PushKey(DIK_UP))
+	{
+		move = { 0,0,kEyeSpeed };
+	}
+	else if (input_->PushKey(DIK_DOWN))
+	{
+		move = { 0,0,-kEyeSpeed };
+	}
+	//視点移動(ベクトルの加算)
+	viewProjection_.eye += move;
+
+	//行列の再計算
+	viewProjection_.UpdateMatrix();
+
+	////注視点の移動ベクトル
+	//move = { 0,0,0 };
+	////tyy支店の移動速さ
+	//const float kTargetSpeed = 0.2f;
+
+	////押した方向で移動ベクトルを変更
+	//if (input_->PushKey(DIK_LEFT))
+	//{
+	//	move = { -kTargetSpeed,0,0 };
+	//}
+	//else if (input_->PushKey(DIK_RIGHT))
+	//{
+	//	move = { kTargetSpeed,0,0 };
+	//}
+	////注視点移動(ベクトルの加算)
+	//{
+	//	viewProjection_.target += move;
+	//}
+	////行列の再計算
+	//viewProjection_.UpdateMatrix();
 
 	CheckAllCollision();
 }
@@ -182,11 +252,15 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
+	skydome_->Draw(viewProjection_);
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 	enemy_->Draw(viewProjection_);
 
+	//天球の描画
+	skydome_->Draw(viewProjection_);
+
+	//model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
