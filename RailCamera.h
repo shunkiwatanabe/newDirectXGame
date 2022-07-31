@@ -15,12 +15,23 @@ public:
 	///<summary>
 	///初期化
 	///</summary>
-	void Initialize(WorldTransform worldTransform, Vector3 radian);
+	void Initialize(Vector3 position, Vector3 rotation);
 
 	///<summary>
 	///更新
 	///</summary>
 	void Update();
+
+	/// <summary>
+	/// ビュープロジェクションを取得
+	/// </summary>
+	/// <returns>ビュープロジェクション</returns>
+	const ViewProjection& GetViewProjection() { return viewProjection_; };
+
+	//ワールド行列を取得
+	const WorldTransform& GetWorldMatrix()const { return worldTransform_; };
+
+	Vector3 Velocity(Vector3 velocity, Matrix4 matWorld_);
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;

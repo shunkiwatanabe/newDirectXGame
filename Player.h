@@ -47,6 +47,9 @@ public:
 
 	Vector3 GetWorldPosition();
 
+	//ワールド行列を取得
+	const WorldTransform& GetWorldMatrix()const { return worldTransform_; };
+
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 

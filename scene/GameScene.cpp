@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 
 	//カメラ始点座標を設定
-	viewProjection_.eye = { 0,0,-10 };
+	//viewProjection_.eye = { 0,0,-10 };
 	////カメラ注視点座標を設定
 	//viewProjection_.target = { 0,0,0 };
 
@@ -59,7 +59,7 @@ void GameScene::Initialize() {
 	//天球の生成
 	skydome_ = new Skydome();
 	//std::list<std::unique_ptr<Skydome>>skydome_;
-	
+
 
 	//3Dモデルの生成
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
@@ -68,13 +68,65 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_);
 
 	//レールカメラの生成
-	railcamera_ = new RailCamera();
+	railCamera_ = std::make_unique<RailCamera>();
 	//レールカメラの初期化
-	railcamera_->Initialize(worldTransform_,worldTransform_.rotation_);
+	railCamera_->Initialize(Vector3(0, 0, -50), Vector3(0, 0, 0));
+
+	//自キャラとレールカメラの親子関係を結ぶ
+	WorldTransform railcamera = railCamera_->GetWorldMatrix();
+	WorldTransform player = player_->GetWorldMatrix();
+	player.parent_ = &railcamera;
+
+	//行列の更新
+	Matrix4 matIdentity;
+	matIdentity.m[0][0] = 1;
+	matIdentity.m[1][1] = 1;
+	matIdentity.m[2][2] = 1;
+	matIdentity.m[3][3] = 1;
+
+	Matrix4 matScale = matIdentity;
+	matScale.m[0][0] = worldTransform_.scale_.x;
+	matScale.m[1][1] = worldTransform_.scale_.y;
+	matScale.m[2][2] = worldTransform_.scale_.z;
+
+	Matrix4 matRotZ = matIdentity;
+	matRotZ.m[0][0] = cos(worldTransform_.rotation_.z);
+	matRotZ.m[0][1] = sin(worldTransform_.rotation_.z);
+	matRotZ.m[1][0] = -sin(worldTransform_.rotation_.z);
+	matRotZ.m[1][1] = cos(worldTransform_.rotation_.z);
+
+	Matrix4 matRotX = matIdentity;
+	matRotX.m[1][1] = cos(worldTransform_.rotation_.x);
+	matRotX.m[1][2] = sin(worldTransform_.rotation_.x);
+	matRotX.m[2][1] = -sin(worldTransform_.rotation_.x);
+	matRotX.m[2][2] = cos(worldTransform_.rotation_.x);
+
+	Matrix4 matRotY = matIdentity;
+	matRotY.m[0][0] = cos(worldTransform_.rotation_.y);
+	matRotY.m[0][2] = sin(worldTransform_.rotation_.y);
+	matRotY.m[2][0] = -sin(worldTransform_.rotation_.y);
+	matRotY.m[2][2] = cos(worldTransform_.rotation_.y);
+
+	Matrix4 matTrans = matIdentity;
+	matTrans.m[3][0] = worldTransform_.translation_.x;
+	matTrans.m[3][1] = worldTransform_.translation_.y;
+	matTrans.m[3][2] = worldTransform_.translation_.z;
+	matTrans.m[3][3] = 1;
+
+	worldTransform_.matWorld_ = matIdentity;
+	worldTransform_.matWorld_ *= matScale;
+
+	worldTransform_.matWorld_ *= matRotZ;
+	worldTransform_.matWorld_ *= matRotX;
+	worldTransform_.matWorld_ *= matRotY;
+
+	worldTransform_.matWorld_ *= matTrans;
+
+	worldTransform_.TransferMatrix();
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
-	
+
 
 	//軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -100,47 +152,27 @@ void GameScene::Update()
 
 	debugCamera_->Update();
 
+	//レールカメラの更新
+	railCamera_->Update();
+
 	//始点の移動ベクトル
 	Vector3 move = { 0,0,0 };
 
-	//始点の移動速さ
-	const float kEyeSpeed = 0.2f;
+	//railCameraをゲームシーンのカメラに適応する
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+	//ビュープロジェクションの転送
+	viewProjection_.TransferMatrix();
 
-	//押した方向で移動ベクトルを変更
-	if (input_->PushKey(DIK_UP))
-	{
-		move = { 0,0,kEyeSpeed };
-	}
-	else if (input_->PushKey(DIK_DOWN))
-	{
-		move = { 0,0,-kEyeSpeed };
-	}
+	//始点の移動速さ
+	const float kEyeSpeed = 0.01f;
+
+	move = { 0,0,kEyeSpeed };
 	//視点移動(ベクトルの加算)
 	viewProjection_.eye += move;
 
 	//行列の再計算
 	viewProjection_.UpdateMatrix();
-
-	////注視点の移動ベクトル
-	//move = { 0,0,0 };
-	////tyy支店の移動速さ
-	//const float kTargetSpeed = 0.2f;
-
-	////押した方向で移動ベクトルを変更
-	//if (input_->PushKey(DIK_LEFT))
-	//{
-	//	move = { -kTargetSpeed,0,0 };
-	//}
-	//else if (input_->PushKey(DIK_RIGHT))
-	//{
-	//	move = { kTargetSpeed,0,0 };
-	//}
-	////注視点移動(ベクトルの加算)
-	//{
-	//	viewProjection_.target += move;
-	//}
-	////行列の再計算
-	//viewProjection_.UpdateMatrix();
 
 	CheckAllCollision();
 }
@@ -257,15 +289,12 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	//天球の描画
 	skydome_->Draw(viewProjection_);
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 	enemy_->Draw(viewProjection_);
 
-	//天球の描画
-	skydome_->Draw(viewProjection_);
-
-	//model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

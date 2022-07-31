@@ -6,7 +6,7 @@ void Skydome::Initialize(Model* model)
 	//テクスチャ読み込み
 	//textureHandle_ = TextureManager::Load("skydome/skydome.jpg");
 	worldTransform_.translation_ = { 0,0,0 };
-	worldTransform_.scale_ = { 38,38,38 };
+	worldTransform_.scale_ = { 35.0f,35.0f,35.0f };
 	worldTransform_.Initialize();
 }
 
