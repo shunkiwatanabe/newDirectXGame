@@ -72,10 +72,15 @@ void GameScene::Initialize() {
 	//レールカメラの初期化
 	railCamera_->Initialize(Vector3(0, 0, -50), Vector3(0, 0, 0));
 
-	//自キャラとレールカメラの親子関係を結ぶ
-	WorldTransform railcamera = railCamera_->GetWorldMatrix();
-	WorldTransform player = player_->GetWorldMatrix();
-	player.parent_ = &railcamera;
+	//player_->SetParent(railCamera_);
+	
+
+	////自キャラとレールカメラの親子関係を結ぶ
+	//WorldTransform railcamera = railCamera_->GetWorldMatrix();
+	//WorldTransform player = player_->GetWorldMatrix();
+	//player_->Initialize(model_, textureHandle_);
+	//railCamera_->Initialize(worldTransform_.translation_, worldTransform_.rotation_);
+	//player.parent_ = &railcamera;
 
 	//行列の更新
 	Matrix4 matIdentity;

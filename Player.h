@@ -42,6 +42,8 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
+	//eqŠÖŒW‚ğŒ‹‚Ôsetter
+	void SetParent(WorldTransform* worldTransform);
 
 	Vector3 Velocity(Vector3 velocity, WorldTransform worldTransform);
 

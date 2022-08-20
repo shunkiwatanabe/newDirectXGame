@@ -303,6 +303,8 @@ void Enemy::Fire()
 		player_->GetWorldPosition().z - GetWorldPosition().z
 	};
 
+	
+
 	float length = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
 	velocity /= length;
 

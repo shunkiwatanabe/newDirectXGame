@@ -14,6 +14,11 @@ Vector3 Player::Velocity(Vector3 velocity, WorldTransform worldTransform)
 	return v;
 }
 
+void Player::SetParent(WorldTransform* worldTransform)
+{
+	worldTransform_.parent_ = worldTransform;
+}
+
 void Player::Initialize(Model* model, uint32_t textureHandle)
 {
 	//NULLポインタチェック
@@ -131,6 +136,9 @@ void Player::Update()
 	worldTransform_.matWorld_ *= matRotY;
 
 	worldTransform_.matWorld_ *= matTrans;
+
+	//親子関係
+	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 
 	worldTransform_.TransferMatrix();
 
